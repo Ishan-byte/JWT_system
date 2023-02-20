@@ -1,11 +1,18 @@
+// Package imports
 const router = require("express").Router();
 const pool = require("../database/db");
 const bcrypt = require("bcrypt");
+
+// Helper Functions
 const jwtGenerator = require("../utils/jwtGenerator");
 const { userChecker } = require("../database/queryFunctions");
 
+//Middleware
+const infoValidator = require("../middleware/validInfo");
+const authGuard = require("../middleware/authGuard");
+
 // Register Route
-router.post("/register", async (req, res) => {
+router.post("/register", infoValidator, async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
@@ -42,7 +49,7 @@ router.post("/register", async (req, res) => {
 });
 
 // Login Route
-router.post("/login", async (req, res) => {
+router.post("/login", infoValidator, async (req, res) => {
   try {
     //Destructuring Request Body
     const { email, password } = req.body;
@@ -73,6 +80,15 @@ router.post("/login", async (req, res) => {
     res.json({ token });
   } catch (error) {
     res.status(500).send(error.message);
+  }
+});
+
+router.get("/is-verified", authGuard, (req, res, next) => {
+  try {
+    res.json({ isUserAuthorized: true });
+  } catch (error) {
+    console.log(error.message);
+    res.statusCode(500).json({ msg: "Internal Server Error" });
   }
 });
 

@@ -1,9 +1,12 @@
 const pool = require("../database/db");
 
+const TABLE_NAME = "USERS";
+
 async function userChecker(email) {
-  const tmp = await pool.query("SELECT * FROM USERS WHERE useremail = $1", [
-    email,
-  ]);
+  const tmp = await pool.query(
+    `SELECT * FROM ${TABLE_NAME} WHERE useremail = $1`,
+    [email]
+  );
 
   if (tmp.rows.length !== 0) {
     return { userIsAvailable: true, userData: tmp.rows[0] };
@@ -12,4 +15,12 @@ async function userChecker(email) {
   }
 }
 
-module.exports = { userChecker };
+async function getUserData(userId) {
+  const tmp = await pool.query(
+    `SELECT * FROM ${TABLE_NAME} WHERE user_id =$1`,
+    [userId]
+  );
+  return tmp.rows[0];
+}
+
+module.exports = { userChecker, getUserData };
