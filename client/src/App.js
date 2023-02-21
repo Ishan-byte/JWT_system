@@ -6,11 +6,16 @@ import {
   Route,
   Redirect,
 } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // Components
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
+
+// Configs
+toast.configure();
 
 function App() {
   const [isAuthenticated, setisAuthenticated] = useState(false);
