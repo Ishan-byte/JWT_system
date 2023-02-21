@@ -6,8 +6,6 @@ function jwtGenerator(userId) {
     user: userId,
   };
 
-  console.log(process.env.TOKEN);
-
   return jwt.sign(payload, process.env.TOKEN, { expiresIn: 60 * 60 });
 }
 
