@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   BrowserRouter as Router,
   Switch,
@@ -18,6 +18,23 @@ function App() {
   function setAuth(Boolean) {
     setisAuthenticated(Boolean);
   }
+
+  useEffect(() => {
+    verifyToken();
+  }, []);
+
+  const verifyToken = async () => {
+    const response = await fetch("http://localhost:5000/auth/is-verified", {
+      method: "GET",
+      headers: {
+        token: localStorage.getItem("token"),
+        "Content-type": "application/json",
+      },
+    });
+
+    const res = await response.json();
+    setAuth(res.isUserAuthorized === true ? true : false);
+  };
 
   return (
     <div className="App">
